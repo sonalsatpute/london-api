@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +32,15 @@ namespace London.Api
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "London.Api", Version = "v1" });
+      });
+
+      services.AddApiVersioning(options =>
+      {
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.ApiVersionReader = new MediaTypeApiVersionReader();
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
+        options.ReportApiVersions = true;
       });
     }
 
