@@ -33,10 +33,7 @@ namespace London.Api.Filters
         error.Detail = context.Exception.Message;
       }
 
-      context.Result = new ObjectResult(error)
-      {
-        StatusCode = 500
-      };
+      context.Result = new ObjectResult(error) { StatusCode = 500 };
     }
   }
 }

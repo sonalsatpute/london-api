@@ -28,7 +28,7 @@ namespace London.Api
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc(options => 
+      services.AddMvc(options =>
       {
         options.Filters.Add<JsonExceptionFilter>();
         options.Filters.Add<RequireHttpsOrCloseAttribute>();
@@ -47,6 +47,12 @@ namespace London.Api
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
         options.ReportApiVersions = true;
+      });
+
+      // policy => policy.WithOrigins("https://example.com") // set this with origin, you need to use in production
+      services.AddCors(options =>
+      {
+        options.AddPolicy("allowed-app-name-policy", policy => policy.AllowAnyOrigin()); // remove all AllowAny* in production 
       });
     }
 
@@ -70,6 +76,8 @@ namespace London.Api
       {
         endpoints.MapControllers();
       });
+
+      app.UseCors("allowed-app-name-policy");
     }
   }
 }
