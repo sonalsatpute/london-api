@@ -11,7 +11,7 @@ namespace London.Api.Models
     public string Tagline { get; set; }
     public string Email { get; set; }
     public string Website { get; set; }
-    public Address Address { get; set; }
+    public Address Location { get; set; }
   }
 
   public class Address
