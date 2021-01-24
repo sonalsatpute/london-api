@@ -28,7 +28,11 @@ namespace London.Api
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc(options => options.Filters.Add<JsonExceptionFilter>());
+      services.AddMvc(options => 
+      {
+        options.Filters.Add<JsonExceptionFilter>();
+        options.Filters.Add<RequireHttpsOrCloseAttribute>();
+      });
       services.AddRouting(options => options.LowercaseUrls = true);
       services.AddControllers();
       services.AddSwaggerGen(c =>
@@ -56,7 +60,7 @@ namespace London.Api
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "London.Api v1"));
       }
 
-      app.UseHttpsRedirection();
+      //app.UseHttpsRedirection();
 
       app.UseRouting();
 
