@@ -1,4 +1,5 @@
 ﻿using London.Api.Models;
+using London.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,11 +11,11 @@ namespace London.Api.Controllers
   [ApiController]
   public class RoomsController : ControllerBase
   {
-    private readonly HotelApiDbContext _context;
+    private readonly IRoomService _roomService;
 
-    public RoomsController(HotelApiDbContext context)
+    public RoomsController(IRoomService roomService)
     {
-      _context = context;
+      _roomService = roomService;
     }
 
     [HttpGet(Name = nameof(GetRooms))]
@@ -27,21 +28,11 @@ namespace London.Api.Controllers
     [ProducesResponseType(404)]
     public async Task<ActionResult<Room>> GetRoomById(Guid roomId)
     {
-      var entity = await _context.Rooms.SingleOrDefaultAsync(entity => entity.Id == roomId);
+      Room room = await _roomService.GetRoomById(roomId);
 
-      if (entity == null)
-      {
-        return NotFound();
-      }
+      if (room == null) return NotFound();
 
-      var resource = new Room
-      {
-        Href = Url.Link(nameof(GetRoomById), new { roomId = entity.Id }),
-        Name = entity.Name,
-        Rate = entity.Rate / 100.0m
-      };
-
-      return resource;
+      return room;
     }
 
   }
