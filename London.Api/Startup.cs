@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace London.Api
 {
@@ -30,6 +31,9 @@ namespace London.Api
     public void ConfigureServices(IServiceCollection services)
     {
       services.Configure<HotelInfo>(Configuration.GetSection("Info"));
+
+      //Use in-memory databata base for quick dev and testing.
+      services.AddDbContext<HotelApiDbContext>(options => options.UseInMemoryDatabase("londondb")) ;
 
       services.AddMvc(options =>
       {
