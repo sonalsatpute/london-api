@@ -25,20 +25,18 @@ namespace London.Api
 
     private static void InitializeDatabase(IHost host)
     {
-      using (var scope = host.Services.CreateScope())
+      using var scope = host.Services.CreateScope();
+      IServiceProvider serviceProvider = scope.ServiceProvider;
+
+      try
       {
-        IServiceProvider serviceProvider = scope.ServiceProvider;
+        SeedData.InitializeAsync(serviceProvider).Wait();
+      }
+      catch (Exception ex)
+      {
+        ILogger logger = serviceProvider.GetRequiredService<ILogger>();
 
-        try
-        {
-          SeedData.InitializeAsync(serviceProvider).Wait();
-        }
-        catch (Exception ex)
-        {
-          ILogger logger = serviceProvider.GetRequiredService<ILogger>();
-
-          logger.LogError(ex, "An error occured seeding database.");
-        }
+        logger.LogError(ex, "An error occured seeding database.");
       }
     }
   }

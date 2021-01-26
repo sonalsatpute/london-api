@@ -1,4 +1,5 @@
-﻿using London.Api.Models;
+﻿using AutoMapper;
+using London.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -8,10 +9,12 @@ namespace London.Api.Services
   public class RoomService : IRoomService
   {
     private readonly HotelApiDbContext _context;
+    private readonly IMapper _mapper;
 
-    public RoomService(HotelApiDbContext context)
+    public RoomService(HotelApiDbContext context, IMapper mapper)
     {
       _context = context;
+      _mapper = mapper;
     }
 
     public async Task<Room> GetRoomById(Guid roomId)
@@ -20,12 +23,7 @@ namespace London.Api.Services
 
       if (entity == null) return null;
 
-      return new Room
-      {
-        Href = null,
-        Name = entity.Name,
-        Rate = entity.Rate / 100
-      };
+      return _mapper.Map<Room>(entity);
     }
   }
 }

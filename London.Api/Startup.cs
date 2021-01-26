@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using London.Api.Services;
+using AutoMapper;
+using London.Api.Infrastructure;
 
 namespace London.Api
 {
@@ -57,6 +59,8 @@ namespace London.Api
       {
         options.AddPolicy("allowed-app-name-policy", policy => policy.AllowAnyOrigin()); // remove all AllowAny* in production 
       });
+
+      services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
