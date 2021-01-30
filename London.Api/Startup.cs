@@ -37,9 +37,11 @@ namespace London.Api
       {
         options.Filters.Add<JsonExceptionFilter>();
         options.Filters.Add<RequireHttpsOrCloseAttribute>();
+        options.Filters.Add<LinkRewritingFilter>();
       });
       services.AddRouting(options => options.LowercaseUrls = true);
-      services.AddControllers();
+      services.AddControllers().AddNewtonsoftJson();
+
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "London.Api", Version = "v1" });

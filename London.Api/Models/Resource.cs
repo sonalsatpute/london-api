@@ -2,9 +2,9 @@
 
 namespace London.Api.Models
 {
-  public abstract class Resource
+  public abstract class Resource : Link
   {
-    [JsonProperty(Order = -2)] //Order -2 to put the property on top
-    public string Href { get; set; }
+    [JsonIgnore]
+    public Link Self { get; set; }
   }
 }

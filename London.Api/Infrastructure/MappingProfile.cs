@@ -7,7 +7,11 @@ namespace London.Api.Infrastructure
   {
     public MappingProfile()
     {
-      CreateMap<RoomEntity, Room>().ForMember(destination => destination.Rate, option => option.MapFrom(src => src.Rate / 100.0m));
+      CreateMap<RoomEntity, Room>()
+        .ForMember(destination => destination.Rate, option => option.MapFrom(src => src.Rate / 100.0m))
+        .ForMember(destination => destination.Self, option => option.MapFrom(src =>
+          Link.To(nameof(Controllers.RoomsController.GetRoomById), new { roomId = src.Id })
+        ));
     }
   }
 }
