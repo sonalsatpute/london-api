@@ -3,6 +3,7 @@ using London.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace London.Api.Controllers
@@ -18,10 +19,19 @@ namespace London.Api.Controllers
       _roomService = roomService;
     }
 
-    [HttpGet(Name = nameof(GetRooms))]
-    public IActionResult GetRooms()
+    [HttpGet(Name = nameof(GetAllRooms))]
+    [ProducesResponseType(200)]
+    public async Task<ActionResult<Collection<Room>>> GetAllRooms()
     {
-      throw new NotImplementedException();
+      var rooms = await _roomService.GetRoomsAsync();
+
+      var collections = new Collection<Room>
+      {
+        Self = Link.Collection(nameof(GetAllRooms)),
+        Value = rooms.ToArray()
+      };
+
+      return collections;
     }
 
     [HttpGet("{roomId}", Name = nameof(GetRoomById))]

@@ -1,4 +1,5 @@
-﻿using London.Api.Infrastructure;
+﻿using London.Api;
+using London.Api.Infrastructure;
 using London.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace London.Api.Filters
+namespace Landon.Api.Filters
 {
   public class LinkRewritingFilter : IAsyncResultFilter
   {
@@ -59,21 +60,21 @@ namespace London.Api.Filters
 
         linkProperty.SetValue(model, rewritten);
 
-        //Special handling of hidden Self property
-        //Un wrappe into the root object
-
+        // Special handling of the hidden Self property:
+        // unwrap into the root object
         if (linkProperty.Name == nameof(Resource.Self))
         {
-          linkProperties.SingleOrDefault(p => p.Name == nameof(Resource.Href))
-            ?.SetValue(model, rewritten.Href);
+          allProperties
+              .SingleOrDefault(p => p.Name == nameof(Resource.Href))
+              ?.SetValue(model, rewritten.Href);
 
-          linkProperties.SingleOrDefault(p => p.Name == nameof(Resource.Method))
-            ?.SetValue(model, rewritten.Method);
+          allProperties
+              .SingleOrDefault(p => p.Name == nameof(Resource.Method))
+              ?.SetValue(model, rewritten.Method);
 
-          linkProperties.SingleOrDefault(p => p.Name == nameof(Resource.Relations))
-                      ?.SetValue(model, rewritten.Relations);
-
-
+          allProperties
+              .SingleOrDefault(p => p.Name == nameof(Resource.Relations))
+              ?.SetValue(model, rewritten.Relations);
         }
 
       }

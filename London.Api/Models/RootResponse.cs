@@ -7,7 +7,6 @@ namespace London.Api.Models
 {
   public class RootResponse : Resource
   {
-    public Link Href { get; set; }
     public Link Rooms { get; set; }
     public Link Info { get; set; }
   }

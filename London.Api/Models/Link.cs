@@ -16,17 +16,22 @@ namespace London.Api.Models
           Relations = null
         };
 
+    public static Link Collection(string routeName, object routeValues = null)
+       => new Link
+       {
+         RouteName = routeName,
+         RouteValues = routeValues,
+         Method = GetMethod,
+         Relations = new[] { "collection" }
+       };
+
     [JsonProperty(Order = -4)]
     public string Href { get; set; }
 
-    [JsonProperty(Order = -3,
-        PropertyName = "rel",
-        NullValueHandling = NullValueHandling.Ignore)]
+    [JsonProperty(Order = -3, PropertyName = "rel", NullValueHandling = NullValueHandling.Ignore)]
     public string[] Relations { get; set; }
 
-    [JsonProperty(Order = -2,
-        DefaultValueHandling = DefaultValueHandling.Ignore,
-        NullValueHandling = NullValueHandling.Ignore)]
+    [JsonProperty(Order = -2, DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
     [DefaultValue(GetMethod)]
     public string Method { get; set; }
 

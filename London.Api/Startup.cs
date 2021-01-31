@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using London.Api.Services;
 using AutoMapper;
 using London.Api.Infrastructure;
+using Landon.Api.Filters;
 
 namespace London.Api
 {
@@ -31,16 +32,16 @@ namespace London.Api
       services.AddScoped<IRoomService, RoomService>();
 
       //Use in-memory databata base for quick dev and testing.
-      services.AddDbContext<HotelApiDbContext>(options => options.UseInMemoryDatabase("londondb")) ;
+      services.AddDbContext<HotelApiDbContext>(options => options.UseInMemoryDatabase("londondb"));
 
-      services.AddMvc(options =>
+      services.AddRouting(options => options.LowercaseUrls = true);
+
+      services.AddControllers(options =>
       {
         options.Filters.Add<JsonExceptionFilter>();
         options.Filters.Add<RequireHttpsOrCloseAttribute>();
         options.Filters.Add<LinkRewritingFilter>();
-      });
-      services.AddRouting(options => options.LowercaseUrls = true);
-      services.AddControllers().AddNewtonsoftJson();
+      }).AddNewtonsoftJson();
 
       services.AddSwaggerGen(c =>
       {

@@ -9,12 +9,13 @@ namespace London.Api.Controllers
   public class RootController : ControllerBase
   {
     [HttpGet(Name = nameof(GetRoot))]
+    [ProducesResponseType(200)]
     public IActionResult GetRoot() 
     {
       var response = new RootResponse
       {
-        Href = Link.To(nameof(RootController.GetRoot)),
-        Rooms = Link.To(nameof(RoomsController.GetRooms)),
+        Self = Link.To(nameof(RootController.GetRoot)),
+        Rooms = Link.Collection(nameof(RoomsController.GetAllRooms)),
         Info = Link.To(nameof(InfoController.GetInfo))
       };
 
