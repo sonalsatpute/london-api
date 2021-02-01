@@ -7,7 +7,7 @@ namespace London.Api.Services
 {
   public interface IOpeningService
   {
-    Task<IEnumerable<Opening>> GetOpeningsAsync();
+    Task<PagedResult<Opening>> GetOpeningsAsync(PagingOptions pagingOptions);
 
     Task<IEnumerable<BookingRange>> GetConflictingSlots(
         Guid roomId,

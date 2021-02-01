@@ -29,8 +29,8 @@ namespace London.Api
     public void ConfigureServices(IServiceCollection services)
     {
       services.Configure<HotelInfo>(Configuration.GetSection("Info"));
-
       services.Configure<HotelOptions>(Configuration);
+      services.Configure<PagingOptions>(Configuration.GetSection("DefaultPagingOptions"));
 
       services.AddScoped<IRoomService, RoomService>();
       services.AddScoped<IOpeningService, OpeningService>();

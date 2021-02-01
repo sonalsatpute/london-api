@@ -24,7 +24,7 @@ namespace London.Api.Services
       _mapper = mapper;
     }
 
-    public async Task<IEnumerable<Opening>> GetOpeningsAsync()
+    public async Task<PagedResult<Opening>> GetOpeningsAsync(PagingOptions pagingOptions)
     {
       var rooms = await _context.Rooms.ToArrayAsync();
 
@@ -59,7 +59,13 @@ namespace London.Api.Services
         allOpenings.AddRange(openings);
       }
 
-      return allOpenings;
+      var pagedOpenins = allOpenings.Skip(pagingOptions.Offset.Value).Take(pagingOptions.Limit.Value);
+
+      return new PagedResult<Opening>
+      { 
+        Items = pagedOpenins,
+        Total = allOpenings.Count
+      };
     }
 
     public async Task<IEnumerable<BookingRange>> GetConflictingSlots(

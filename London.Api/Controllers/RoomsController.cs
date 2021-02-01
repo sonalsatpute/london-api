@@ -1,6 +1,7 @@
 ﻿using London.Api.Models;
 using London.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,12 +14,13 @@ namespace London.Api.Controllers
   {
     private readonly IRoomService _roomService;
     private readonly IOpeningService _openingService;
+    private readonly PagingOptions _defaultPagingOptions;
 
-    public RoomsController(
-        IRoomService roomService, IOpeningService openingService)
+    public RoomsController(IRoomService roomService, IOpeningService openingService, IOptions<PagingOptions> defaultPagingOptionsWrapper)
     {
       _roomService = roomService;
       _openingService = openingService;
+      _defaultPagingOptions = defaultPagingOptionsWrapper.Value;
     }
 
     [HttpGet(Name = nameof(GetAllRooms))]
@@ -50,14 +52,21 @@ namespace London.Api.Controllers
     // GET /rooms/openings
     [HttpGet("openings", Name = nameof(GetAllRoomOpenings))]
     [ProducesResponseType(200)]
-    public async Task<ActionResult<Collection<Opening>>> GetAllRoomOpenings()
+    [ProducesResponseType(400)]
+    public async Task<ActionResult<Collection<Opening>>> GetAllRoomOpenings([FromQuery] PagingOptions pagingOptions = null)
     {
-      var openings = await _openingService.GetOpeningsAsync();
+      pagingOptions.Offset = pagingOptions.Offset ?? _defaultPagingOptions.Offset;
+      pagingOptions.Limit = pagingOptions.Limit ?? _defaultPagingOptions.Limit;
 
-      var collection = new Collection<Opening>()
+      PagedResult<Opening> openings = await _openingService.GetOpeningsAsync(pagingOptions);
+
+      var collection = new PagedCollection<Opening>()
       {
         Self = Link.ToCollection(nameof(GetAllRoomOpenings)),
-        Value = openings.ToArray()
+        Value = openings.Items.ToArray(),
+        Size = openings.Total,
+        Offset = pagingOptions.Offset,
+        Limit = pagingOptions.Limit,
       };
 
       return collection;
