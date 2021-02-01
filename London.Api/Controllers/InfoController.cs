@@ -1,7 +1,6 @@
 ﻿using London.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
 
 namespace London.Api.Controllers
 {

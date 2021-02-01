@@ -1,7 +1,6 @@
 ﻿using London.Api.Models;
 using London.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +12,13 @@ namespace London.Api.Controllers
   public class RoomsController : ControllerBase
   {
     private readonly IRoomService _roomService;
+    private readonly IOpeningService _openingService;
 
-    public RoomsController(IRoomService roomService)
+    public RoomsController(
+        IRoomService roomService, IOpeningService openingService)
     {
       _roomService = roomService;
+      _openingService = openingService;
     }
 
     [HttpGet(Name = nameof(GetAllRooms))]
@@ -27,7 +29,7 @@ namespace London.Api.Controllers
 
       var collections = new Collection<Room>
       {
-        Self = Link.Collection(nameof(GetAllRooms)),
+        Self = Link.ToCollection(nameof(GetAllRooms)),
         Value = rooms.ToArray()
       };
 
@@ -43,6 +45,22 @@ namespace London.Api.Controllers
       if (room == null) return NotFound();
 
       return room;
+    }
+
+    // GET /rooms/openings
+    [HttpGet("openings", Name = nameof(GetAllRoomOpenings))]
+    [ProducesResponseType(200)]
+    public async Task<ActionResult<Collection<Opening>>> GetAllRoomOpenings()
+    {
+      var openings = await _openingService.GetOpeningsAsync();
+
+      var collection = new Collection<Opening>()
+      {
+        Self = Link.ToCollection(nameof(GetAllRoomOpenings)),
+        Value = openings.ToArray()
+      };
+
+      return collection;
     }
 
   }

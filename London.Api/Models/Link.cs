@@ -16,7 +16,7 @@ namespace London.Api.Models
           Relations = null
         };
 
-    public static Link Collection(string routeName, object routeValues = null)
+    public static Link ToCollection(string routeName, object routeValues = null)
        => new Link
        {
          RouteName = routeName,

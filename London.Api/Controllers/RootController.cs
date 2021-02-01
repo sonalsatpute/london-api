@@ -15,7 +15,7 @@ namespace London.Api.Controllers
       var response = new RootResponse
       {
         Self = Link.To(nameof(RootController.GetRoot)),
-        Rooms = Link.Collection(nameof(RoomsController.GetAllRooms)),
+        Rooms = Link.ToCollection(nameof(RoomsController.GetAllRooms)),
         Info = Link.To(nameof(InfoController.GetInfo))
       };
 

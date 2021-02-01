@@ -29,7 +29,14 @@ namespace London.Api
     public void ConfigureServices(IServiceCollection services)
     {
       services.Configure<HotelInfo>(Configuration.GetSection("Info"));
+
+      services.Configure<HotelOptions>(Configuration);
+
       services.AddScoped<IRoomService, RoomService>();
+      services.AddScoped<IOpeningService, OpeningService>();
+      services.AddScoped<IBookingService, BookingService>();
+      services.AddScoped<IDateLogicService, DateLogicService>();
+
 
       //Use in-memory databata base for quick dev and testing.
       services.AddDbContext<HotelApiDbContext>(options => options.UseInMemoryDatabase("londondb"));
