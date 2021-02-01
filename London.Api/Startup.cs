@@ -71,6 +71,15 @@ namespace London.Api
       });
 
       services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
+
+      services.Configure<ApiBehaviorOptions>(options => 
+      {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+          var errorResponse = new ApiError(context.ModelState);
+          return new BadRequestObjectResult(errorResponse);
+        };
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
