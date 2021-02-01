@@ -60,14 +60,9 @@ namespace London.Api.Controllers
 
       PagedResult<Opening> openings = await _openingService.GetOpeningsAsync(pagingOptions);
 
-      var collection = new PagedCollection<Opening>()
-      {
-        Self = Link.ToCollection(nameof(GetAllRoomOpenings)),
-        Value = openings.Items.ToArray(),
-        Size = openings.Total,
-        Offset = pagingOptions.Offset,
-        Limit = pagingOptions.Limit,
-      };
+      var collection = PagedCollection<Opening>.Create(
+        Link.ToCollection(nameof(GetAllRoomOpenings)),
+        openings.Items.ToArray(), openings.Total, pagingOptions);
 
       return collection;
     }
