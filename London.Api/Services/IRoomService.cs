@@ -8,6 +8,6 @@ namespace London.Api.Services
   public interface IRoomService
   {
     Task<Room> GetRoomById(Guid roomId);
-    Task<IEnumerable<Room>> GetRoomsAsync();
+    Task<PagedResult<Room>> GetRoomsAsync(PagingOptions pagingOptions);
   }
 }

@@ -20,10 +20,23 @@ namespace London.Api.Services
       _mappingConfigutation = mappingConfigutation;
     }
 
-    public async Task<IEnumerable<Room>> GetRoomsAsync()
+    public async Task<PagedResult<Room>> GetRoomsAsync(PagingOptions pagingOptions)
     {
-      IQueryable<Room> query = _context.Rooms.ProjectTo<Room>(_mappingConfigutation);
-      return await query.ToArrayAsync();
+      IQueryable<RoomEntity> query = _context.Rooms;
+
+      int size = await query.CountAsync();
+
+      Room[] rooms = await query
+        .Skip(pagingOptions.Offset.Value)
+        .Take(pagingOptions.Limit.Value)
+        .ProjectTo<Room>(_mappingConfigutation)
+        .ToArrayAsync();
+
+      return new PagedResult<Room>
+      {
+        Items = rooms,
+        Total = size
+      };
     }
 
     public async Task<Room> GetRoomById(Guid roomId)

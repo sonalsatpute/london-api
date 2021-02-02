@@ -25,15 +25,17 @@ namespace London.Api.Controllers
 
     [HttpGet(Name = nameof(GetAllRooms))]
     [ProducesResponseType(200)]
-    public async Task<ActionResult<Collection<Room>>> GetAllRooms()
+    [ProducesResponseType(400)]
+    public async Task<ActionResult<Collection<Room>>> GetAllRooms([FromQuery] PagingOptions pagingOptions)
     {
-      var rooms = await _roomService.GetRoomsAsync();
+      pagingOptions.Offset ??= _defaultPagingOptions.Offset;
+      pagingOptions.Limit ??= _defaultPagingOptions.Limit;
 
-      var collections = new Collection<Room>
-      {
-        Self = Link.ToCollection(nameof(GetAllRooms)),
-        Value = rooms.ToArray()
-      };
+      PagedResult<Room> pagedResult = await _roomService.GetRoomsAsync(pagingOptions);
+
+      var collections = PagedCollection<Room>.Create(
+        Link.ToCollection(nameof(GetAllRoomOpenings)),
+        pagedResult.Items.ToArray(), pagedResult.Total, pagingOptions);
 
       return collections;
     }
